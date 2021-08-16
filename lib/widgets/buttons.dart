@@ -56,27 +56,53 @@ class _ButtonsState extends State<Buttons> {
 }
 
 TextButton _buttons(BuildContext context, String buttonLabel, int index) {
+  /// var num = Provider.of<InputNumber>(context).num;
   return TextButton(
       onPressed: () {
         // Check buttons index
         switch (index) {
-          // button '+'
-          // case 3:
-          //   {
-          //     Provider.of<InputNumber>(context, listen: false).setNum("");
-          //     return Provider.of<InputNumber>(context, listen: false).som();
-          //   }
+
           // button 'C'
           case 0:
             {
               return Provider.of<InputNumber>(context, listen: false)
                   .setNum("");
             }
+
+          // button '+'
+          case 3:
+            {
+              return Provider.of<InputNumber>(context, listen: false).som();
+              
+            }
+
+          // button '-'
+          case 7: {
+            return Provider.of<InputNumber>(context, listen: false).subtr();
+          }
+
+          // button '*'
+          case 11: {
+            return Provider.of<InputNumber>(context, listen: false).multipl();
+          }
+
+          // button '/'
+          case 15: {
+            return Provider.of<InputNumber>(context, listen: false).div();
+          }
+
           // button '<'
           case 18:
             {
               return Provider.of<InputNumber>(context, listen: false).del();
             }
+
+          // button '='
+          case 19:
+            {
+              return Provider.of<InputNumber>(context, listen: false).result();
+            }
+
           default:
             {
               return Provider.of<InputNumber>(context, listen: false)
