@@ -59,7 +59,9 @@ TextButton _buttons(BuildContext context, String buttonLabel, int index) {
   var num = Provider.of<InputNumber>(context).num;
   return TextButton(
       onPressed: () {
+        // button '.'
         if (index == 16) {
+          // Check how many '.' has the current number
           if ('.'.allMatches(num).length >= 1) {
             debugPrint("Too much '.'");
             return;
