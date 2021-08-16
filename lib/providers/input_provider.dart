@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class InputNumber extends ChangeNotifier {
   String _labelNum = "";
   double _firstNumber = 0;
+
   // Tell Which operation is the user making
   String _whichOperation = '';
 
@@ -27,7 +28,6 @@ class InputNumber extends ChangeNotifier {
       _firstNumber = double.parse(_labelNum);
       setNum('');
     }
-    // debugPrint(_firstNumber.toString());
   }
 
   subtr() {
@@ -54,6 +54,23 @@ class InputNumber extends ChangeNotifier {
     }
   }
 
+  // Change the signal of the number
+  isPositive() {
+    if (_labelNum != '') {
+      _whichOperation = "+/-";
+      _labelNum = (double.parse(_labelNum) * -1).toString();
+      notifyListeners();
+    }
+  }
+
+  // percentage button
+  perc() {
+    if (_labelNum != '') {
+      _labelNum = (double.parse(_labelNum) / 100).toString();
+      notifyListeners();
+    }
+  }
+
   // delete the last character(s)
   del() {
     if (_labelNum != "" && _labelNum.length > 0) {
@@ -62,6 +79,7 @@ class InputNumber extends ChangeNotifier {
     }
   }
 
+  // button '=' show the result of any operation
   result() {
     // Select corrent operation
     switch (_whichOperation) {

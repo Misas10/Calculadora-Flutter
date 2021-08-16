@@ -56,9 +56,16 @@ class _ButtonsState extends State<Buttons> {
 }
 
 TextButton _buttons(BuildContext context, String buttonLabel, int index) {
-  /// var num = Provider.of<InputNumber>(context).num;
+  var num = Provider.of<InputNumber>(context).num;
   return TextButton(
       onPressed: () {
+        if (index == 16) {
+          if ('.'.allMatches(num).length >= 1) {
+            debugPrint("Too much '.'");
+            return;
+          }
+        }
+
         // Check buttons index
         switch (index) {
 
@@ -69,27 +76,42 @@ TextButton _buttons(BuildContext context, String buttonLabel, int index) {
                   .setNum("");
             }
 
+          // button '+/-'
+          case 1:
+            {
+              return Provider.of<InputNumber>(context, listen: false)
+                  .isPositive();
+            }
+
+          // button '%'
+          case 2:
+            {
+              return Provider.of<InputNumber>(context, listen: false).perc();
+            }
+
           // button '+'
           case 3:
             {
               return Provider.of<InputNumber>(context, listen: false).som();
-              
             }
 
           // button '-'
-          case 7: {
-            return Provider.of<InputNumber>(context, listen: false).subtr();
-          }
+          case 7:
+            {
+              return Provider.of<InputNumber>(context, listen: false).subtr();
+            }
 
           // button '*'
-          case 11: {
-            return Provider.of<InputNumber>(context, listen: false).multipl();
-          }
+          case 11:
+            {
+              return Provider.of<InputNumber>(context, listen: false).multipl();
+            }
 
           // button '/'
-          case 15: {
-            return Provider.of<InputNumber>(context, listen: false).div();
-          }
+          case 15:
+            {
+              return Provider.of<InputNumber>(context, listen: false).div();
+            }
 
           // button '<'
           case 18:
@@ -113,7 +135,7 @@ TextButton _buttons(BuildContext context, String buttonLabel, int index) {
       child: Text(buttonLabel));
 }
 
-bool IsOperator(String value) {
+bool _isOperator(String value) {
   if (value == "+" || value == "-" || value == "X" || value == "/") {
     return true;
   }
