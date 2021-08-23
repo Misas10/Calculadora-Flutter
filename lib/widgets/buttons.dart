@@ -1,4 +1,5 @@
 import 'package:calculadora/providers/input_provider.dart';
+import 'package:calculadora/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,7 @@ class Buttons extends StatefulWidget {
 // List of buttons in the calculator app
 
 class _ButtonsState extends State<Buttons> {
-  List<String> buttons = [
+  final List<String> buttons = [
     "C", // 0
     "+/-", // 1
     "%", // 2
@@ -39,16 +40,17 @@ class _ButtonsState extends State<Buttons> {
     // Create a GridView and
     // Allow us to change Tile's Cross and Main axix
     return StaggeredGridView.countBuilder(
-      padding: EdgeInsets.all(2),
+      physics: NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(2),
       crossAxisCount: 4,
       itemCount: buttons.length,
       itemBuilder: (context, index) {
-        return _buttons(context, buttons[index], index);
+        return Container(
+          child: _buttons(context, buttons[index], index),
+          padding: const EdgeInsets.all(10),
+        );
       },
       staggeredTileBuilder: (index) {
-        // if (index == 17) {
-        //   return StaggeredTile.count(2, 1);
-        // }
         return StaggeredTile.count(1, 1);
       },
     );
@@ -56,90 +58,127 @@ class _ButtonsState extends State<Buttons> {
 }
 
 TextButton _buttons(BuildContext context, String buttonLabel, int index) {
+  final isDarkTheme = Provider.of<ThemeProvider>(context).isDarkTheme;
   var num = Provider.of<InputNumber>(context).num;
   return TextButton(
-      onPressed: () {
-        // button '.'
-        if (index == 16) {
-          // Check how many '.' has the current number
-          if ('.'.allMatches(num).length >= 1) {
-            debugPrint("Too much '.'");
-            return;
+    onPressed: () {
+      // button '.'
+      if (index == 16) {
+        // Check how many '.' has the current number
+        if ('.'.allMatches(num).length >= 1) {
+          debugPrint("Too much '.'");
+          return;
+        }
+      }
+
+      // Check buttons index
+      switch (index) {
+
+        // button 'C'
+        case 0:
+          {
+            return Provider.of<InputNumber>(context, listen: false).setNum("");
           }
-        }
 
-        // Check buttons index
-        switch (index) {
+        // button '+/-'
+        case 1:
+          {
+            return Provider.of<InputNumber>(context, listen: false)
+                .isPositive();
+          }
 
-          // button 'C'
-          case 0:
-            {
-              return Provider.of<InputNumber>(context, listen: false)
-                  .setNum("");
-            }
+        // button '%'
+        case 2:
+          {
+            return Provider.of<InputNumber>(context, listen: false).perc();
+          }
 
-          // button '+/-'
-          case 1:
-            {
-              return Provider.of<InputNumber>(context, listen: false)
-                  .isPositive();
-            }
+        // button '+'
+        case 3:
+          {
+            return Provider.of<InputNumber>(context, listen: false).som();
+          }
 
-          // button '%'
-          case 2:
-            {
-              return Provider.of<InputNumber>(context, listen: false).perc();
-            }
+        // button '-'
+        case 7:
+          {
+            return Provider.of<InputNumber>(context, listen: false).subtr();
+          }
 
-          // button '+'
-          case 3:
-            {
-              return Provider.of<InputNumber>(context, listen: false).som();
-            }
+        // button '*'
+        case 11:
+          {
+            return Provider.of<InputNumber>(context, listen: false).multipl();
+          }
 
-          // button '-'
-          case 7:
-            {
-              return Provider.of<InputNumber>(context, listen: false).subtr();
-            }
+        // button '/'
+        case 15:
+          {
+            return Provider.of<InputNumber>(context, listen: false).div();
+          }
 
-          // button '*'
-          case 11:
-            {
-              return Provider.of<InputNumber>(context, listen: false).multipl();
-            }
+        // button '<'
+        case 18:
+          {
+            return Provider.of<InputNumber>(context, listen: false).del();
+          }
 
-          // button '/'
-          case 15:
-            {
-              return Provider.of<InputNumber>(context, listen: false).div();
-            }
+        // button '='
+        case 19:
+          {
+            return Provider.of<InputNumber>(context, listen: false).result();
+          }
 
-          // button '<'
-          case 18:
-            {
-              return Provider.of<InputNumber>(context, listen: false).del();
-            }
-
-          // button '='
-          case 19:
-            {
-              return Provider.of<InputNumber>(context, listen: false).result();
-            }
-
-          default:
-            {
-              return Provider.of<InputNumber>(context, listen: false)
-                  .addNum(buttonLabel);
-            }
-        }
-      },
-      child: Text(buttonLabel));
+        default:
+          {
+            return Provider.of<InputNumber>(context, listen: false)
+                .addNum(buttonLabel);
+          }
+      }
+    },
+    style: TextButton.styleFrom(
+      backgroundColor: _isOperator(buttonLabel, context, isDarkTheme),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(60)),
+    ),
+    child: _isDeleteButton(buttonLabel)
+        ? Text(
+            buttonLabel,
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          )
+        : Icon(
+            Icons.backspace,
+            size: 16,
+          ),
+  );
 }
 
-bool _isOperator(String value) {
-  if (value == "+" || value == "-" || value == "X" || value == "/") {
-    return true;
+Color _isOperator(String value, BuildContext context, bool isDarkTheme) {
+  // For non-numbers buttons
+  // And see if is dark theme or light theme
+  // Setting differents colors for each theme
+  if (value == "+" ||
+      value == "-" ||
+      value == "X" ||
+      value == "/" ||
+      value == "C" ||
+      value == "+/-" ||
+      value == "%" ||
+      value == "=") {
+    if (isDarkTheme) {
+      return Color(0xffF05454);
+    }
+
+    return Color(0xffD0E8F2);
   }
-  return false;
+
+  if (!isDarkTheme) return Color(0xffFFE8DF);
+
+  return Color(0xff30475E);
+}
+
+bool _isDeleteButton(String value) {
+  if (value == "<") return false;
+  return true;
 }
