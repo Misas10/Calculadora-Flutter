@@ -82,36 +82,38 @@ class InputNumber extends ChangeNotifier {
   // button '=' show the result of any operation
   result() {
     // Select corrent operation
-    switch (_whichOperation) {
-      case '+':
-        {
-          _labelNum = (_firstNumber + double.parse(_labelNum)).toString();
-          // debugPrint((_firstNumber + double.parse(_labelNum)).toString());
-          notifyListeners();
-          return;
-        }
-      case '-':
-        {
-          _labelNum = (_firstNumber - double.parse(_labelNum)).toString();
-          notifyListeners();
-          return;
-        }
-      case '/':
-        {
-          _labelNum = (_firstNumber / double.parse(_labelNum)).toString();
-          notifyListeners();
-          return;
-        }
-      case '*':
-        {
-          _labelNum = (_firstNumber * double.parse(_labelNum)).toString();
-          notifyListeners();
-          return;
-        }
-      default:
-        {
-          return;
-        }
+    if (_labelNum != "") {
+      switch (_whichOperation) {
+        case '+':
+          {
+            _labelNum = (_firstNumber + double.parse(_labelNum)).toString();
+            // debugPrint((_firstNumber + double.parse(_labelNum)).toString());
+            notifyListeners();
+            return;
+          }
+        case '-':
+          {
+            _labelNum = (_firstNumber - double.parse(_labelNum)).toString();
+            notifyListeners();
+            return;
+          }
+        case '/':
+          {
+            _labelNum = (_firstNumber / double.parse(_labelNum)).toString();
+            notifyListeners();
+            return;
+          }
+        case '*':
+          {
+            _labelNum = (_firstNumber * double.parse(_labelNum)).toString();
+            notifyListeners();
+            return;
+          }
+        default:
+          {
+            return;
+          }
+      }
     }
   }
 }
