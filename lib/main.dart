@@ -8,7 +8,13 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) => MultiProvider(
         providers: [
@@ -17,10 +23,11 @@ class MyApp extends StatelessWidget {
         ],
         builder: (context, child) {
           final _themeProvider = Provider.of<ThemeProvider>(context);
+          _themeProvider.getTheme();
           return MaterialApp(
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
-            themeMode: _themeProvider.themeMode,
+            themeMode: _themeProvider.theme,
             debugShowCheckedModeBanner: false,
             home: Interface(),
           );
